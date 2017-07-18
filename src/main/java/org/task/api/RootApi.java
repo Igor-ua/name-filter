@@ -8,6 +8,8 @@ import org.task.core.Contact;
 import org.task.core.ContactRepository;
 import org.task.core.View;
 
+import java.util.List;
+
 /**
  * Root API
  */
@@ -40,5 +42,25 @@ public class RootApi {
 	@JsonView(View.Summary.class)
 	public Contact findOne(@PathVariable("id") long id) {
 		return contactsRepo.findOne(id);
+	}
+
+	@RequestMapping(
+			value = "/hello/all",
+			method = RequestMethod.GET)
+	@ResponseBody
+	@JsonView(View.Summary.class)
+	public List<Contact> findAll() {
+		return contactsRepo.findAll();
+	}
+
+	@RequestMapping(
+			value = "/hello/contacts",
+			params = {"nameFilter"},
+			method = RequestMethod.GET)
+	@ResponseBody
+	@JsonView(View.Summary.class)
+	public List<Contact> findContacts(@RequestParam(value = "nameFilter") String nameFilter) {
+		System.out.println("nameFilter: " + nameFilter);
+		return contactsRepo.findAll();
 	}
 }

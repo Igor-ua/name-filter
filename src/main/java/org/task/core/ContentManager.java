@@ -1,11 +1,13 @@
 package org.task.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 /**
@@ -14,19 +16,28 @@ import java.util.List;
 @Component
 public class ContentManager {
 
-	private int ENTRY_QUANTITY = 100;
+	private int ENTRY_QUANTITY = 10;
 
 	@Autowired
-	private ContactRepository contactsRepo;
+	JdbcTemplate jdbcTemplate;
 
 	@PostConstruct
 	public void fillDb() {
-		List<Contact> contacts = new ArrayList<>(ENTRY_QUANTITY);
-		for (int i = 0; i < ENTRY_QUANTITY; i++) {
-			Contact contact = new Contact();
-			contact.setName("Mike");
-			contacts.add(contact);
-		}
-		contactsRepo.save(contacts);
+
+		String sql = "INSERT INTO CONTACTS (ID, NAME) VALUES (?, ?)";
+
+		jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				String id = Integer.toString(i + 1);
+				ps.setString(1, id);
+				ps.setString(2, "Mike_" + id);
+			}
+
+			@Override
+			public int getBatchSize() {
+				return ENTRY_QUANTITY;
+			}
+		});
 	}
 }
