@@ -22,6 +22,10 @@ public class Contact {
 	public Contact() {
 	}
 
+	public Contact(Long id) {
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -50,5 +54,10 @@ public class Contact {
 		int result = id != null ? id.hashCode() : 0;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "{id=" + id + ", name='" + name + "'}";
 	}
 }

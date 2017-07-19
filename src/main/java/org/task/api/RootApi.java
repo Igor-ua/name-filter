@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import org.task.core.Contact;
-import org.task.core.ContactRepository;
-import org.task.core.View;
+import org.task.core.*;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class RootApi {
 	private static final String REDIRECT_URL = "http://localhost:8586/hello";
 
 	@Autowired
-	private ContactRepository contactsRepo;
+	private ContactsService contactsService;
 
 	@RequestMapping("/")
 	public RedirectView index() {
@@ -36,31 +34,27 @@ public class RootApi {
 	}
 
 	@RequestMapping(
-			value = "/hello/{id}",
-			method = RequestMethod.GET)
-	@ResponseBody
-	@JsonView(View.Summary.class)
-	public Contact findOne(@PathVariable("id") long id) {
-		return contactsRepo.findOne(id);
-	}
-
-	@RequestMapping(
-			value = "/hello/all",
-			method = RequestMethod.GET)
-	@ResponseBody
-	@JsonView(View.Summary.class)
-	public List<Contact> findAll() {
-		return contactsRepo.findAll();
-	}
-
-	@RequestMapping(
 			value = "/hello/contacts",
 			params = {"nameFilter"},
 			method = RequestMethod.GET)
 	@ResponseBody
 	@JsonView(View.Summary.class)
-	public List<Contact> findContacts(@RequestParam(value = "nameFilter") String nameFilter) {
+	public List findContacts(@RequestParam(value = "nameFilter") String nameFilter) {
 		System.out.println("nameFilter: " + nameFilter);
-		return contactsRepo.findAll();
+		Page page = contactsService.getContacts("Mike", 1);
+		return page.getResult();
+	}
+
+	@RequestMapping(
+			value = "/hello/contacts",
+			params = {"nameFilter", "page"},
+			method = RequestMethod.GET)
+	@ResponseBody
+	@JsonView(View.Summary.class)
+	public List findFilteredContacts(@RequestParam(value = "nameFilter") String regexp,
+											  @RequestParam(value = "page") Integer pageNumber) {
+		Page page = contactsService.getContacts(regexp, pageNumber);
+		System.out.println(page);
+		return page.getResult();
 	}
 }

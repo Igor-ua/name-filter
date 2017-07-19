@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>XR</name>
-	<description>Backend for XR dedicated server</description>
+	<name>Task</name>
+	<description>Spring boot task</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
