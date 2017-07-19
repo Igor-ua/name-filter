@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import org.task.core.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -16,15 +17,15 @@ import java.util.List;
 public class RootApi {
 
 	private static final String HELLO_API = "Hello API";
-	private static final String REDIRECT_URL = "http://localhost:8586/hello";
 
 	@Autowired
 	private ContactsService contactsService;
 
 	@RequestMapping("/")
-	public RedirectView index() {
+	public RedirectView index(HttpServletRequest request) {
 		RedirectView redirectView = new RedirectView();
-		redirectView.setUrl(REDIRECT_URL);
+		String redirectUrl = request.getRequestURL().toString() + "hello";
+		redirectView.setUrl(redirectUrl);
 		return redirectView;
 	}
 
@@ -52,7 +53,7 @@ public class RootApi {
 	@ResponseBody
 	@JsonView(View.Summary.class)
 	public List findFilteredContacts(@RequestParam(value = "nameFilter") String regexp,
-											  @RequestParam(value = "page") Integer pageNumber) {
+									 @RequestParam(value = "page") Integer pageNumber) {
 		Page page = contactsService.getContacts(regexp, pageNumber);
 		System.out.println(page);
 		return page.getResult();
