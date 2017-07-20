@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/")
 public class RootApi {
 
-	private static final String ROOT_MESSAGE = "Url to use:<br/> http://server:port/hello/contacts?nameFilter=RegExp";
+	private static final String ROOT_MESSAGE = "Url to use: /hello/contacts?nameFilter=RegExp";
 
 	@Autowired
 	private ContactsService contactsService;
