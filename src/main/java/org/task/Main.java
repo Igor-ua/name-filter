@@ -1,6 +1,5 @@
 package org.task;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
@@ -14,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 @Configuration
-public class Main extends SpringBootServletInitializer implements CommandLineRunner {
+public class Main extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -23,9 +22,5 @@ public class Main extends SpringBootServletInitializer implements CommandLineRun
 
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);
-	}
-
-	@Override
-	public void run(String... strings) throws Exception {
 	}
 }
