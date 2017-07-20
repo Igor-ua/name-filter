@@ -1,6 +1,7 @@
 package org.task.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +11,14 @@ import java.util.List;
 @Service
 public class ContactsService {
 
-	private static final Integer DEFAULT_PAGE_SIZE = 2;
-
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	@Value("${page.size}")
+	private Integer pageSize;
+
 	public Page getContacts(String regexp, int pageNumber) {
 
-		int pageSize = DEFAULT_PAGE_SIZE;
 		/**
 		 * Condition: not to filter any data on the db level
 		 */

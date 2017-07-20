@@ -1,6 +1,7 @@
 package org.task.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -16,10 +17,11 @@ import java.sql.SQLException;
 @Component
 public class ContentManager {
 
-	private int ENTRY_QUANTITY = 10;
-
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+
+	@Value("${db.entries.quantity}")
+	private Integer entriesQuantity;
 
 	@PostConstruct
 	public void fillDb() {
@@ -36,7 +38,7 @@ public class ContentManager {
 
 			@Override
 			public int getBatchSize() {
-				return ENTRY_QUANTITY;
+				return entriesQuantity;
 			}
 		});
 	}

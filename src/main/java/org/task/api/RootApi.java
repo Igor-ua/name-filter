@@ -7,6 +7,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.task.core.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -40,10 +41,11 @@ public class RootApi {
 			method = RequestMethod.GET)
 	@ResponseBody
 	@JsonView(View.Summary.class)
-	public List findContacts(@RequestParam(value = "nameFilter") String nameFilter) {
-		System.out.println("nameFilter: " + nameFilter);
-		Page page = contactsService.getContacts("Mike", 1);
-		return page.getResult();
+	public RedirectView findContacts(@RequestParam(value = "nameFilter") String nameFilter, HttpServletRequest request) {
+		RedirectView redirectView = new RedirectView();
+		String redirectUrl = request.getRequestURL().toString() + "?nameFilter=" + nameFilter + "&page=1";
+		redirectView.setUrl(redirectUrl);
+		return redirectView;
 	}
 
 	@RequestMapping(
@@ -53,9 +55,12 @@ public class RootApi {
 	@ResponseBody
 	@JsonView(View.Summary.class)
 	public List findFilteredContacts(@RequestParam(value = "nameFilter") String regexp,
-									 @RequestParam(value = "page") Integer pageNumber) {
+									 @RequestParam(value = "page") Integer pageNumber,
+									 HttpServletResponse response) {
 		Page page = contactsService.getContacts(regexp, pageNumber);
-		System.out.println(page);
+		response.setHeader("X-Pagination-Page", Integer.toString(page.getPageNumber()));
+		response.setHeader("X-Pagination-PageSize", Integer.toString(page.getPageSize()));
+		response.setHeader("X-Pagination-HasMore", Boolean.toString(page.hasMore()));
 		return page.getResult();
 	}
 }
