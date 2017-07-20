@@ -8,6 +8,8 @@ import org.task.core.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 /**
@@ -17,22 +19,14 @@ import java.util.List;
 @RequestMapping("/")
 public class RootApi {
 
-	private static final String HELLO_API = "Hello API";
+	private static final String ROOT_MESSAGE = "Url to use:<br/> http://server:port/hello/contacts?nameFilter=RegExp";
 
 	@Autowired
 	private ContactsService contactsService;
 
 	@RequestMapping("/")
-	public RedirectView index(HttpServletRequest request) {
-		RedirectView redirectView = new RedirectView();
-		String redirectUrl = request.getRequestURL().toString() + "hello";
-		redirectView.setUrl(redirectUrl);
-		return redirectView;
-	}
-
-	@RequestMapping("/hello")
-	public String hello() {
-		return HELLO_API;
+	public String index() {
+		return ROOT_MESSAGE;
 	}
 
 	@RequestMapping(
@@ -54,9 +48,10 @@ public class RootApi {
 			method = RequestMethod.GET)
 	@ResponseBody
 	@JsonView(View.Summary.class)
-	public List findFilteredContacts(@RequestParam(value = "nameFilter") String regexp,
-									 @RequestParam(value = "page") Integer pageNumber,
-									 HttpServletResponse response) {
+	public List findFilteredContacts(
+			@RequestParam(value = "nameFilter") String regexp,
+			@RequestParam(value = "page") @Min(1) @Max(Integer.MAX_VALUE) Integer pageNumber,
+			HttpServletResponse response) {
 		Page page = contactsService.getContacts(regexp, pageNumber);
 		response.setHeader("X-Pagination-Page", Integer.toString(page.getPageNumber()));
 		response.setHeader("X-Pagination-PageSize", Integer.toString(page.getPageSize()));
