@@ -17,4 +17,4 @@ Response obtains values:<br>
 **How-to:**</br>
 Requires java 8<br>
 `"mvn package"` builds "uber-jar" with an embedded (h2) database inside (does not need `vagrant` or anything else).<br>
-Runs from the /target dir: java -jar name-filter-0.0.1-SNAPSHOT.jar (by default: http://localhost:8586/)
+Runs from the `/target dir`: `java -jar name-filter-0.0.1-SNAPSHOT.jar` (by default: `http://localhost:8586/`)
