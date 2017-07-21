@@ -37,6 +37,28 @@ public class Page {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Page page = (Page) o;
+
+		if (pageNumber != page.pageNumber) return false;
+		if (pageSize != page.pageSize) return false;
+		if (hasMore != page.hasMore) return false;
+		return result != null ? result.equals(page.result) : page.result == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result1 = result != null ? result.hashCode() : 0;
+		result1 = 31 * result1 + pageNumber;
+		result1 = 31 * result1 + pageSize;
+		result1 = 31 * result1 + (hasMore ? 1 : 0);
+		return result1;
+	}
+
+	@Override
 	public String toString() {
 		return "Page{" +
 				"result=" + result +
